@@ -1,0 +1,43 @@
+@startuml
+   title FoodTasker
+   participant "Customer" as cus
+   participant "Restaurant" as r
+   participant "Driver" as d
+   participant "Food Cart" as fc
+   participant "Food" as f
+   participant "Order" as order
+   participant "Payment" as pm
+   r->f: Create food list
+   cus->f: Select food list
+   cus->fc: Checkout food
+   fc->order: Create new order
+   loop Add foods
+       fc -> order: Add foods
+       activate order
+       order --> fc: Foods total
+       deactivate order
+   end
+   fc->order: Calculate
+   fc->order: Finalize sale
+   activate order
+   order --> cus: Total
+   deactivate order
+
+
+   cus->order: Submit payment
+   order->pm: Create payment
+   pm-->cus: Results
+   order->r: Receive order
+   activate order
+   r->order: Send food by order
+   deactivate order
+   loop select order
+       d->order: Select order
+       activate order
+       order-->d: Submit order
+       deactivate order
+   end
+   d->cus: Send order
+   deactivate order
+
+@enduml

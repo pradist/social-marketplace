@@ -1,0 +1,148 @@
+swagger: '2.0'
+info:
+  description: |
+    Social marketplace is system
+  version: 1.0.0
+  title: Swagger social marketplace
+
+host: social-marketplace.kbank.com
+basePath: /logger
+schemes:
+ - https
+ - http
+tags:
+- name: activity log
+  description: Back office activity log
+- name: audit log
+  description: Back office audit log
+paths:
+  /customer/{customerID}:
+    get:
+      security:
+      - bearerAuth: []
+      tags:
+      - activity log
+      summary: Get customer info
+      produces:
+      - application/json
+      parameters:
+      - name: customerID
+        in: path
+        description: Customer ID
+        type: string
+        required: true
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: object
+            properties:
+              total:
+                type: integer
+                format: int64
+                example: 25
+              results:
+                type: array
+                items: 
+                  $ref: '#/definitions/ActivityLog'
+definitions:
+  ActivityLog:
+    type: object
+    required:
+    - activityLogID
+    - menuName
+    - activityType
+    - username
+    - activityDate
+    properties:
+      activityLogID:
+        type: string
+        example: 5c75b71c-438c-49be-b6fd-f1090809e3f6
+      menuName:
+        type: string
+        example: Company Profile
+      activityType:
+        type: string
+        example: Create
+      username:
+        type: string
+        example: pradist.k
+      roleName:
+        type: string
+        example: admin
+      activityDate:
+        type: string
+        example: "2020-11-03T11:34:17+07:00"
+  ActivityLogView:
+    type: object
+    required:
+    - activityLogID
+    - menuName
+    - activityType
+    - username
+    - roleName
+    - activityDate
+    - currentData
+    properties:
+      activityLogID:
+        type: string
+        example: 5c75b71c-438c-49be-b6fd-f1090809e3f6
+      menuName:
+        type: string
+        example: Company Profile
+      activityType:
+        type: string
+        example: Create
+      username:
+        type: string
+        example: pradist.k
+      roleName:
+        type: string
+        example: admin
+      activityDate:
+        type: string
+        example: "2020-11-03T11:34:17+07:00"
+      previousData:
+        type: string
+        example: {"merchantName":"Merchant 4","compCode":"4444444​","Account Number":"1234567890​","Company Name":"Company TEST​","Product":"Bill Payment​","Address":"xxx"}
+      currentData:
+        type: string
+        example: {"merchantName":"Merchant 4","compCode":"4444444​","Account Number":"1234567890​, 1234512345","Company Name":"Company TEST​","Product":"Bill Payment​","Address":"xxx"}
+  AuditLog:
+    type: object
+    required:
+    - auditID
+    - resourceType
+    - username
+    - ip
+    - activityType
+    - activityDate
+    - status
+    properties:
+      auditID:
+        type: string
+        example: 5c75b71c-438c-49be-b6fd-f1090809e3f6
+      resourceType:
+        type: string
+        example: Company Profile
+      username:
+        type: string
+        example: pradist.k
+      ip:
+        type: string
+        example: 0.0.0.0
+      activityType:
+        type: string
+        example: 
+      activityDate:
+        type: string
+        example: "2020-11-03T11:34:17+07:00"
+      status:
+        type: string
+        example: "Success"
+
+securityDefinitions:  
+  bearerAuth:  
+    type: apiKey  
+    in: header  
+    name: Authorization
