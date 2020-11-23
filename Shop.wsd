@@ -1,0 +1,24 @@
+@startuml
+    title Shop
+    participant "Shop" as shop
+    participant "Shop Profile" as r
+    participant "Product" as p
+    participant "Bank" as b
+    
+    shop->r: Onboarding
+    r->shop: Results
+
+    
+    shop->p: Create Product
+
+    loop Add products to shop
+            shop->p: Search Product
+        activate p
+            shop->p: Add Product
+            p-->shop: results
+        deactivate p
+    end
+    
+    shop->b: Check balance
+    shop->b: Check report
+@enduml

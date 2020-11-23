@@ -1,146 +1,840 @@
 swagger: '2.0'
 info:
-  description: |
-    Social marketplace is system
+  description: This is a K Marketplace Swagger.
   version: 1.0.0
-  title: Swagger social marketplace
+  title: K Marketplace Product
+basePath: /v1
 
-host: social-marketplace.kbank.com
-basePath: /logger
 schemes:
- - https
- - http
-tags:
-- name: activity log
-  description: Back office activity log
-- name: audit log
-  description: Back office audit log
+  - https
 paths:
-  /customer/{customerID}:
-    get:
-      security:
-      - bearerAuth: []
+
+  '/user':
+    post:
       tags:
-      - activity log
-      summary: Get customer info
+        - user
+      summary: Register user
+      description: ...
+      operationId: RegistUser
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: customerID
-        in: path
-        description: Customer ID
-        type: string
-        required: true
+        - in: body
+          name: body
+          description: Register user object
+          required: true
+          schema:
+            $ref: '#/definitions/reqUser'
       responses:
-        200:
+        '200':
           description: successful operation
           schema:
-            type: object
-            properties:
-              total:
-                type: integer
-                format: int64
-                example: 25
-              results:
-                type: array
-                items: 
-                  $ref: '#/definitions/ActivityLog'
-definitions:
-  ActivityLog:
-    type: object
-    required:
-    - activityLogID
-    - menuName
-    - activityType
-    - username
-    - activityDate
-    properties:
-      activityLogID:
-        type: string
-        example: 5c75b71c-438c-49be-b6fd-f1090809e3f6
-      menuName:
-        type: string
-        example: Company Profile
-      activityType:
-        type: string
-        example: Create
-      username:
-        type: string
-        example: pradist.k
-      roleName:
-        type: string
-        example: admin
-      activityDate:
-        type: string
-        example: "2020-11-03T11:34:17+07:00"
-  ActivityLogView:
-    type: object
-    required:
-    - activityLogID
-    - menuName
-    - activityType
-    - username
-    - roleName
-    - activityDate
-    - currentData
-    properties:
-      activityLogID:
-        type: string
-        example: 5c75b71c-438c-49be-b6fd-f1090809e3f6
-      menuName:
-        type: string
-        example: Company Profile
-      activityType:
-        type: string
-        example: Create
-      username:
-        type: string
-        example: pradist.k
-      roleName:
-        type: string
-        example: admin
-      activityDate:
-        type: string
-        example: "2020-11-03T11:34:17+07:00"
-      previousData:
-        type: string
-        example: {"merchantName":"Merchant 4","compCode":"4444444​","Account Number":"1234567890​","Company Name":"Company TEST​","Product":"Bill Payment​","Address":"xxx"}
-      currentData:
-        type: string
-        example: {"merchantName":"Merchant 4","compCode":"4444444​","Account Number":"1234567890​, 1234512345","Company Name":"Company TEST​","Product":"Bill Payment​","Address":"xxx"}
-  AuditLog:
-    type: object
-    required:
-    - auditID
-    - resourceType
-    - username
-    - ip
-    - activityType
-    - activityDate
-    - status
-    properties:
-      auditID:
-        type: string
-        example: 5c75b71c-438c-49be-b6fd-f1090809e3f6
-      resourceType:
-        type: string
-        example: Company Profile
-      username:
-        type: string
-        example: pradist.k
-      ip:
-        type: string
-        example: 0.0.0.0
-      activityType:
-        type: string
-        example: 
-      activityDate:
-        type: string
-        example: "2020-11-03T11:34:17+07:00"
-      status:
-        type: string
-        example: "Success"
+            $ref: '#/definitions/resUser'
+        '500':
+          description: operation fail
+  '/user/login':
+    post:
+      tags:
+        - user
+      summary: login
+      description: ...
+      operationId: login
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Register user object
+          required: true
+          schema:
+            $ref: '#/definitions/reqLogin'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resLogin'
+        '401':
+          description: Unauthorized
+        '500':
+          description: operation fail
 
+  '/product/{product_id}/uploadImage':
+    post:
+      tags:
+        - product
+      security:
+        - bearerAuth: []
+      summary: uploads an image
+      description: ''
+      operationId: uploadFile product
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: product_id
+          in: path
+          description: ID of product to update
+          required: true
+          type: integer
+          format: int64
+        - name: file
+          in: formData
+          description: file to upload
+          required: false
+          type: file
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/product'         
+  '/product':
+    post:
+      tags:
+        - product
+      security:
+        - bearerAuth: []
+      summary: Create product
+      description: ...
+      operationId: Create product
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          description: ...
+          required: true
+          schema:
+            $ref: '#/definitions/product'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '404':
+          description: data not found
+        '500':
+          description: operation fail
+  '/product/{product_id}': 
+    put:
+      tags:
+        - product
+      security:
+        - bearerAuth: []
+      summary: Update product
+      description: ...
+      operationId: Update product
+      produces:
+        - application/json
+      parameters:
+        - name: product_id
+          in: path
+          description: ID of product to update
+          required: true
+          type: integer
+          format: int64
+        - in: body
+          name: body
+          description: ...
+          required: true
+          schema:
+            $ref: '#/definitions/product'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '404':
+          description: data not found
+        '500':
+          description: operation fail
+    get:
+      tags:
+        - product
+      security:
+        - bearerAuth: []
+      summary: Get product
+      description: ...
+      operationId: Get product
+      produces:
+        - application/json
+      parameters:
+        - name: product_id
+          in: path
+          description: ID of product to get
+          required: true
+          type: integer
+          format: int64          
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '404':
+          description: data not found
+        '500':
+          description: operation fail
+    delete:
+      tags:
+        - product
+      security:
+        - bearerAuth: []
+      summary: Delete product
+      description: ...
+      operationId: Delete product
+      produces:
+        - application/json
+      parameters:
+        - name: product_id
+          in: path
+          description: ID of product to delete
+          required: true
+          type: integer
+          format: int64          
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '404':
+          description: data not found
+        '500':
+          description: operation fail
+  '/product/list': 
+    get:
+      tags:
+        - product
+      security:
+        - bearerAuth: []
+      summary: Search products
+      operationId: Search product
+      produces:
+        - application/json
+      parameters:
+        - name: attribute
+          in: query
+          description: Attribute values that need to be considered for filter
+          required: true
+          type: array
+          items:
+            type: string
+            enum: [XXX, YYYY, ZZZZ]
+            default: available
+          collectionFormat: multi
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '500':
+          description: operation fail
+
+  '/payment':
+    post:
+      tags:
+        - payment
+      security:
+        - bearerAuth: []
+      summary: Create payment
+      description: ...
+      operationId: Create payment
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: ...
+          required: true
+          schema:
+            $ref: '#/definitions/payment'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '404':
+          description: data not found
+        '500':
+          description: operation fail
+  '/payment/{payment_id}': 
+    put:
+      tags:
+        - payment
+      security:
+        - bearerAuth: []
+      summary: Update payment
+      description: ...
+      operationId: Update payment
+      produces:
+        - application/json
+      parameters:
+        - name: payment_id
+          in: path
+          description: ID of payment to get
+          required: true
+          type: integer
+          format: int64
+        - name: body
+          in: body
+          description: ...
+          required: true
+          schema:
+            $ref: '#/definitions/payment'
+            
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '404':
+          description: data not found
+        '500':
+          description: operation fail
+    get:
+      tags:
+        - payment
+      security:
+        - bearerAuth: []
+      summary: Get payment
+      description: ...
+      operationId: Get payment
+      produces:
+        - application/json
+      parameters:
+        - name: payment_id
+          in: path
+          description: ID of payment to get
+          required: true
+          type: integer
+          format: int64          
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '404':
+          description: data not found
+        '500':
+          description: operation fail
+
+  '/order':
+    post:
+      tags:
+        - order
+      security:
+        - bearerAuth: []
+      summary: Create order
+      description: ...
+      operationId: Create order
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: ...
+          required: true
+          schema:
+            $ref: '#/definitions/order'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '404':
+          description: data not found
+        '500':
+          description: operation fail
+  '/order/{order_id}': 
+    put:
+      tags:
+        - order
+      security:
+        - bearerAuth: []
+      summary: Update order
+      description: ...
+      operationId: Update order
+      produces:
+        - application/json
+      parameters:
+        - name: order_id
+          in: path
+          description: ID of order to get
+          required: true
+          type: integer
+          format: int64
+        - name: body
+          in: body
+          description: ...
+          required: true
+          schema:
+            $ref: '#/definitions/order'
+            
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '404':
+          description: data not found
+        '500':
+          description: operation fail
+    get:
+      tags:
+        - order
+      security:
+        - bearerAuth: []
+      summary: Get order
+      description: ...
+      operationId: Get order
+      produces:
+        - application/json
+      parameters:
+        - name: order_id
+          in: path
+          description: ID of order to get
+          required: true
+          type: integer
+          format: int64          
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '404':
+          description: data not found
+        '500':
+          description: operation fail
+    delete:
+      tags:
+        - order
+      security:
+        - bearerAuth: []
+      summary: order
+      description: ...
+      operationId: Delete order
+      produces:
+        - application/json
+      parameters:
+        - name: order_id
+          in: path
+          description: ID of order to delete
+          required: true
+          type: integer
+          format: int64          
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '404':
+          description: data not found
+        '500':
+          description: operation fail
+
+  '/shop':
+    post:
+      tags:
+        - shop
+      security:
+        - bearerAuth: []
+      summary: Create shop
+      description: ...
+      operationId: Create shop
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: ...
+          required: true
+          schema:
+            $ref: '#/definitions/shop'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '404':
+          description: data not found
+        '500':
+          description: operation fail
+  '/shop/{shop_id}': 
+    put:
+      tags:
+        - shop
+      security:
+        - bearerAuth: []
+      summary: Update shop
+      description: ...
+      operationId: Update shop
+      produces:
+        - application/json
+      parameters:
+        - name: shop_id
+          in: path
+          description: ID of shop to get
+          required: true
+          type: integer
+          format: int64
+        - name: body
+          in: body
+          description: ...
+          required: true
+          schema:
+            $ref: '#/definitions/shop'
+            
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '404':
+          description: data not found
+        '500':
+          description: operation fail
+    get:
+      tags:
+        - shop
+      security:
+        - bearerAuth: []
+      summary: Get shop
+      description: ...
+      operationId: Get shop
+      produces:
+        - application/json
+      parameters:
+        - name: shop_id
+          in: path
+          description: ID of shop to get
+          required: true
+          type: integer
+          format: int64          
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '404':
+          description: data not found
+        '500':
+          description: operation fail
+    delete:
+      tags:
+        - shop
+      security:
+        - bearerAuth: []
+      summary: shop
+      description: ...
+      operationId: Delete shop
+      produces:
+        - application/json
+      parameters:
+        - name: shop_id
+          in: path
+          description: ID of shop to delete
+          required: true
+          type: integer
+          format: int64          
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/resCommon'
+        '404':
+          description: data not found
+        '500':
+          description: operation fail
+
+definitions:
+        
+  shop:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+        minLength: 3
+        maxLength: 255
+      owner_id:
+        type: integer
+        format: int64
+      address_id:
+        type: integer
+        format: int64
+        
+  product_image:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      product_id:
+        type: integer
+        format: int64
+      name:
+        type: string
+        minLength: 3
+        maxLength: 255
+      url:
+        type: string
+        
+  product:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64    
+      name:
+        type: string
+        minLength: 3
+        maxLength: 255
+      description:
+        type: string
+        minLength: 3
+        maxLength: 255        
+      category_id:
+        type: integer
+        format: int64
+      shop_id:
+        type: integer
+        format: int64
+      attribute_set_id:
+        type: integer
+        format: int64
+      tax_id:
+        type: integer
+        format: int64
+      price:
+        type: number
+        format: float
+      currency:
+        type: string
+        minLength: 3
+        maxLength: 3
+      sku:
+        type: string
+        minLength: 3
+        maxLength: 100
+      stock:
+        type: number
+        format: int64
+      active:
+        type: number
+        format: int32
+  
+  payment:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      billing_no:
+        type: string
+        minLength: 3
+        maxLength: 255
+      order_id:
+        type: integer
+        format: int64
+      amount:
+        type: number
+        format: float
+      currency:
+        type: string
+        minLength: 3
+        maxLength: 3
+      exchange_id:
+        type: integer
+        format: int64
+      status:
+        type: integer
+        format: int32
+
+  exchange:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      contract_no:
+        type: string
+        minLength: 3
+        maxLength: 255
+      request_amount:
+        type: number
+        format: float
+      request_currency:
+        type: string
+        minLength: 3
+        maxLength: 3
+      settlement_amount:
+        type: number
+        format: float
+      settlement_currency:
+        type: string
+        minLength: 3
+        maxLength: 3
+      status:
+        type: integer
+        format: int32
+      remark:
+        type: string
+        minLength: 3
+        maxLength: 255
+      fee_amount:
+        type: number
+        format: float
+      fee_currency:
+        type: string
+        minLength: 3
+        maxLength: 3
+
+  order:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      shopping_address_id:
+        type: integer
+        format: int64
+      billing_address_id:
+        type: integer
+        format: int64
+      shipping_id:
+        type: integer
+        format: int64
+      status:
+        type: integer
+        format: int32
+      currency:
+        type: string
+        minLength: 3
+        maxLength: 3
+      comment:
+        type: string
+        minLength: 3
+        maxLength: 255
+      shipping_no:
+        type: string
+        minLength: 3
+        maxLength: 255
+      invoice_no:
+        type: string
+        minLength: 3
+        maxLength: 255
+      delivery_date:
+        type: string
+        format: date-time
+        example: '1999-12-31T23:59:59Z'
+      total_discout:
+        type: number
+        format: float
+      total_discout_tax:
+        type: number
+        format: float
+      total_shipping:
+        type: number
+        format: float
+      total_shipping_tax:
+        type: number
+        format: float  
+      total:
+        type: number
+        format: float
+      total_tax:
+        type: number
+        format: float
+         
+  resCommon:
+    type: object
+    properties:
+      Time:
+        example: '1999-12-31T23:59:59Z'
+        format: date-time
+        type: string
+      result:
+        type: string
+        enum: [Ok,Fail]
+      resource:
+        type: array
+        items:
+          "$ref": "#/definitions/map"
+  
+  reqUser:
+    type: object
+    properties:
+      username:
+        type: string
+        minLength: 3
+        maxLength: 255
+      email:
+        type: string
+        format: email
+        minLength: 3
+        maxLength: 255        
+      mobile:
+        type: string
+        minLength: 10
+        maxLength: 10
+      
+  resUser:
+    type: object
+    properties:
+      Time:
+        example: '1999-12-31T23:59:59Z'
+        format: date-time
+        type: string
+      result:
+        type: string
+        enum: [Ok,Fail]
+      resource:
+        type: array
+        items:
+          "$ref": "#/definitions/map"
+
+  reqLogin:
+    type: object
+    properties:
+      username:
+        type: string
+        minLength: 3
+        maxLength: 255
+      password:
+        type: string
+        format: password
+        minLength: 3
+        maxLength: 255        
+      
+  resLogin:
+    type: object
+    properties:
+      token:
+        type: string
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+      time:
+        example: '1999-12-31T23:59:59Z'
+        format: date-time
+        type: string
+      result:
+        type: string
+        enum: [Ok,Fail]
+      resource:
+        type: array
+        items:
+          "$ref": "#/definitions/map"
+  
+  map:
+    type: object
+    properties:
+      name:
+        type: string
+        minLength: 1
+        maxLength: 255
+      value:
+        type: object
+        
 securityDefinitions:  
   bearerAuth:  
     type: apiKey  
