@@ -35,13 +35,13 @@ paths:
         '500':
           description: operation fail
 
-  '/user':
+  '/user/register':
     post:
       tags:
         - user
       security:
         - bearerAuth: []
-      summary: Register user
+      summary: register user
       description: ...
       operationId: RegistUser
       produces:
@@ -772,15 +772,18 @@ definitions:
         type: string
         minLength: 3
         maxLength: 255
+        example: "pooh"
       email:
         type: string
         format: email
         minLength: 3
-        maxLength: 255        
+        maxLength: 255
+        example: "pooh@mail.com"       
       mobile:
         type: string
         minLength: 10
         maxLength: 10
+        example: "0889119988"
       
   resUser:
     type: object
