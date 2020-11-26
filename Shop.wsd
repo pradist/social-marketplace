@@ -1,24 +1,49 @@
 @startuml
     title Shop
-    participant "Shop" as shop
-    participant "Shop Profile" as r
+    skinparam participantPadding 140
+    actor "Shop" as shop
+    participant "Profile" as r
     participant "Product" as p
     participant "Bank" as b
     
-    shop->r: Onboarding
-    r->shop: Results
-
+    shop->r: Onboarding to system
+    r->shop: Create profile success
     
-    shop->p: Create Product
-
-    loop Add products to shop
+    shop->p: Manage Product
+    activate p
+    loop Manage products in shop
             shop->p: Search Product
         activate p
+            p->shop: 
+        deactivate p
             shop->p: Add Product
-            p-->shop: results
+        activate p
+            p->shop: 
+        deactivate p
+            shop->p: Edit Product
+        activate p
+            p->shop: 
+        deactivate p
+            shop->p: Delete Product
+        activate p
+            p->shop: 
         deactivate p
     end
+
+    p->shop: Results
+    deactivate p
+
+    shop->r: Inquire balance
+    r->b:
+    activate b
+    b->r:
+    deactivate b
+    r->shop: Results
     
-    shop->b: Check balance
-    shop->b: Check report
+    shop->r: Check report
+    r->b:
+    activate b
+    b->r:
+    deactivate b
+    r->shop: Results
 @enduml

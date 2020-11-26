@@ -1,28 +1,33 @@
 @startuml
    title Customer
-   participant "Customer" as cus
+   skinparam participantPadding 60
+   actor "Customer" as cus
    participant "Shopping Cart" as sc
    participant "Product" as p
    participant "Order" as order
    participant "Payment" as pm
-   cus->p: Search product list
-   cus->sc: Checkout product
+   participant "Logistics" as l
+   cus->p: Search product
+   cus->sc: Checkout product to shoping cart
    sc->order: Create new order
-   loop Add products
-        activate order
-        sc -> order: Add products
-        sc -> order: Remove products
-        order --> sc: products total
-        deactivate order
+   loop Manage Order
+        sc -> p: Add products
+        activate p
+        sc -> p: Remove products
+        p -> sc: products total
+        deactivate p
    end
    sc->order: Calculate
    sc->order: Finalize sale
    activate order
-   order --> cus: Total
+   order -> cus: Total
    deactivate order
 
-   cus->order: Submit payment
+   cus->order: Submit order
    order->pm: Create payment
-   pm-->cus: Results
+   pm->cus: Results
+
+   cus->l: Inquire location
+   l->cus: Send localation to customer
 
 @enduml
